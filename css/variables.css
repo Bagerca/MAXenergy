@@ -1,18 +1,28 @@
 :root {
-    /* Цветовая палитра: Киберпанк / Энергетики */
+    /* Основная цветовая палитра */
     --bg-color: #0b0c10;
     --surface-color: #1f2833;
     --surface-hover: #2a3644;
+    --surface-border: rgba(255, 255, 255, 0.08);
     
     --text-main: #ffffff;
     --text-muted: #c5c6c7;
     
-    --accent-neon: #66fcf1; /* Токсично-голубой/зеленый */
+    /* Акцентные цвета */
+    --accent-neon: #66fcf1;
     --accent-glow: rgba(102, 252, 241, 0.4);
+    --accent-hover: #7ffdf5;
     --accent-purple: #c026d3;
-    --accent-orange: #f97316;
     
+    /* Системные цвета */
     --danger: #ef4444;
+    --danger-light: rgba(239, 68, 68, 0.1);
+    --danger-hover: rgba(239, 68, 68, 0.5);
+    
+    /* Telegram брендинг */
+    --brand-tg: #0088cc;
+    --brand-tg-dark: #005580;
+    --brand-tg-hover: #0099e6;
     
     /* Типографика */
     --font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
@@ -30,9 +40,8 @@
     --radius-md: 12px;
     --radius-lg: 20px;
     
-    --shadow-neon: 0 0 10px var(--accent-glow);
-    
     /* Z-index слои */
     --z-header: 100;
+    --z-toast: 150;
     --z-modal: 200;
 }

@@ -8,41 +8,43 @@ window.App.views.CartView = {
         const totalItems = window.App.store.getCartTotalItems();
         
         let contentHtml = '';
+        let hasUnknownPrices = false; // Флаг для чека
 
         if (cart.length === 0) {
             contentHtml = `
-                <div class="cart-empty-card">
-                    <div class="cart-empty-icon">
-                        ${window.App.icons.bolt}
-                    </div>
-                    <h2>В корзине пусто</h2>
-                    <p>Сердечко пока в безопасности, но курсач сам себя не напишет.</p>
-                    <a href="#/" class="btn-primary">Выбрать энергетик</a>
+                <div class="cart-empty-card" style="padding: 4rem 2rem; text-align: center; background: var(--surface-color); border-radius: var(--radius-lg);">
+                    <h2 style="font-size: 2rem; margin-bottom: 1rem;">Корзина пуста</h2>
+                    <p style="color: var(--text-muted); margin-bottom: 2rem;">Выбери свой любимый вкус на главной.</p>
+                    <a href="#/" class="btn-primary" style="display: inline-block;">К покупкам</a>
                 </div>
             `;
         } else {
             const itemsHtml = cart.map(item => {
-                const itemTotal = item.product.price * item.quantity;
+                const isKnown = typeof item.product.price === 'number';
+                if (!isKnown) hasUnknownPrices = true;
+                
+                // Рендер цены для карточки товара в корзине
+                const itemTotalDisplay = isKnown ? `${item.product.price * item.quantity} ₽` : 'Уточнить';
+                const pricePerItemDisplay = isKnown ? `${item.product.price} ₽ / шт.` : item.product.price;
+
                 return `
                     <div class="cart-item">
                         <div class="cart-item-info">
-                            <a href="#/drink/${item.product.id}" class="cart-item-img ${item.product.imageClass}">
-                                ${window.App.icons.bolt}
+                            <a href="#/drink/${item.product.id}" class="cart-item-img-wrapper">
+                                <img src="${item.product.image}" alt="${item.product.name}">
                             </a>
                             <div class="cart-item-details">
-                                <a href="#/drink/${item.product.id}" class="cart-item-title">
-                                    ${item.product.name}
-                                </a>
+                                <a href="#/drink/${item.product.id}" class="cart-item-title">${item.product.name}</a>
                                 <div class="cart-item-meta">
-                                    <span class="cart-item-volume">${item.product.volume}</span>
-                                    <span>${item.product.price} ₽ / шт.</span>
+                                    <span>${item.product.volume}</span>
+                                    <span>${pricePerItemDisplay}</span>
                                 </div>
                             </div>
                         </div>
                         
                         <div class="cart-item-controls">
                             <div class="cart-item-price-block">
-                                <div class="cart-item-total">${itemTotal} ₽</div>
+                                <div class="cart-item-total" style="${!isKnown ? 'font-size:1rem; color:var(--text-muted);' : ''}">${itemTotalDisplay}</div>
                             </div>
                             
                             <div class="qty-capsule">
@@ -51,7 +53,7 @@ window.App.views.CartView = {
                                 <button class="qty-btn" data-action="plus" data-id="${item.product.id}">+</button>
                             </div>
                             
-                            <button class="btn-icon remove-btn" data-id="${item.product.id}" title="Удалить">
+                            <button class="btn-icon remove-btn" data-id="${item.product.id}" aria-label="Удалить">
                                 ${window.App.icons.trash}
                             </button>
                         </div>
@@ -59,43 +61,29 @@ window.App.views.CartView = {
                 `;
             }).join('');
 
-            // Формируем сообщение для Telegram и подставляем реальный юзернейм
-            const tgMessage = this.generateOrderMessage(cart, totalPrice);
+            // Финальный расчет чека
+            let finalPriceDisplay = totalPrice > 0 ? `${totalPrice} ₽` : '0 ₽';
+            if (hasUnknownPrices) {
+                finalPriceDisplay += ' <span style="font-size:1rem; color:var(--text-muted); display:block; text-align:right;">+ уточнить</span>';
+            }
+
+            const tgMessage = this.generateOrderMessage(cart, totalPrice, hasUnknownPrices);
             const tgLink = `https://t.me/YaPonchick1487?text=${encodeURIComponent(tgMessage)}`;
 
             contentHtml = `
                 <div class="cart-layout">
-                    <!-- Левая колонка: список товаров -->
-                    <div class="cart-list">
-                        ${itemsHtml}
-                    </div>
+                    <div class="cart-list">${itemsHtml}</div>
                     
-                    <!-- Правая колонка: чек и оформление -->
                     <aside class="cart-summary">
                         <div class="summary-title">Детали заказа</div>
-                        
-                        <div class="summary-row">
-                            <span>Количество банок</span>
-                            <strong>${totalItems} шт.</strong>
-                        </div>
-                        <div class="summary-row">
-                            <span>Доставка (СПК 104к)</span>
-                            <strong class="summary-free">В руки</strong>
-                        </div>
-                        
+                        <div class="summary-row"><span>Товаров</span><strong>${totalItems} шт.</strong></div>
+                        <div class="summary-row"><span>Доставка</span><strong class="summary-free">В руки</strong></div>
                         <div class="summary-divider"></div>
-                        
-                        <div class="summary-total">
+                        <div class="summary-total" style="align-items: center;">
                             <span>Итого</span>
-                            <div class="summary-total-price">${totalPrice} ₽</div>
+                            <div class="summary-total-price" style="text-align: right;">${finalPriceDisplay}</div>
                         </div>
-                        
-                        <a href="${tgLink}" target="_blank" class="btn-tg">
-                            ${window.App.icons.send} Заказать у Максима
-                        </a>
-                        <p class="summary-note">
-                            Откроется личка в Telegram с уже готовым списком твоего заказа.
-                        </p>
+                        <a href="${tgLink}" target="_blank" class="btn-tg">Заказать в Telegram</a>
                     </aside>
                 </div>
             `;
@@ -103,21 +91,12 @@ window.App.views.CartView = {
 
         const html = `
             <div class="cart-page-wrapper">
-                <aside class="cart-sidebar">
-                    <a href="#/" class="back-link">
-                        ${window.App.icons.back} Назад
-                    </a>
-                </aside>
-                
-                <div class="cart-content">
-                    <h1 class="cart-page-title">Твой заказ</h1>
-                    ${contentHtml}
-                </div>
+                <aside class="cart-sidebar"><a href="#/" class="back-link">${window.App.icons.back} Назад</a></aside>
+                <div class="cart-content">${contentHtml}</div>
             </div>
         `;
 
         const afterRender = () => {
-            // Обработчики кнопок количества (- / +)
             document.querySelectorAll('.qty-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     const id = e.currentTarget.getAttribute('data-id');
@@ -127,7 +106,6 @@ window.App.views.CartView = {
                 });
             });
 
-            // Обработчик удаления позиции
             document.querySelectorAll('.remove-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     const id = e.currentTarget.getAttribute('data-id');
@@ -140,12 +118,18 @@ window.App.views.CartView = {
         return { html, afterRender };
     },
 
-    generateOrderMessage(cart, total) {
-        let text = `Привет, Макс! Я из СПК, хочу забрать:\n\n`;
+    generateOrderMessage(cart, total, hasUnknownPrices) {
+        let text = `Привет! Заказ (СПК):\n\n`;
         cart.forEach(item => {
-            text += `⚡ ${item.product.name} (${item.product.volume}) — ${item.quantity} шт. (${item.product.price * item.quantity} ₽)\n`;
+            const isKnown = typeof item.product.price === 'number';
+            const priceStr = isKnown ? `${item.product.price * item.quantity} ₽` : 'Цена уточняется';
+            text += `⚡ ${item.product.name} — ${item.quantity} шт. (${priceStr})\n`;
         });
-        text += `\n💰 Итого: ${total} ₽\nГде и когда сможешь передать?`;
+        
+        let totalStr = total > 0 ? `${total} ₽` : '0 ₽';
+        if (hasUnknownPrices) totalStr += ' + позиции без цены';
+        
+        text += `\n💰 Итого: ${totalStr}\nГде можно забрать?`;
         return text;
     }
 };

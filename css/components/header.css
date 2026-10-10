@@ -6,7 +6,7 @@ header {
     position: sticky;
     top: 0;
     z-index: var(--z-header);
-    border-bottom: 1px solid rgba(102, 252, 241, 0.15);
+    border-bottom: 1px solid var(--surface-border);
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
 }
 
@@ -26,7 +26,7 @@ header {
     font-weight: 900;
     text-transform: uppercase;
     letter-spacing: 1.5px;
-    background: linear-gradient(90deg, var(--accent-neon), #3b82f6);
+    background: linear-gradient(90deg, var(--accent-neon), var(--accent-purple));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     transition: transform 0.3s ease;

@@ -1,7 +1,7 @@
-/* Главная кнопка (В корзину) */
+/* Главная кнопка */
 .btn-primary {
     background-color: var(--accent-neon);
-    color: #0b0c10; /* Ультра-тёмный текст для читаемости */
+    color: var(--bg-color);
     padding: 10px 20px;
     border-radius: var(--radius-sm);
     font-weight: 900;
@@ -15,7 +15,7 @@
 }
 
 .btn-primary:hover {
-    background-color: #7ffdf5; /* Чуть светлее при наведении */
+    background-color: var(--accent-hover);
     box-shadow: 
         0 0 20px rgba(102, 252, 241, 0.6), 
         0 0 40px rgba(102, 252, 241, 0.3);
@@ -27,7 +27,7 @@
     box-shadow: 0 0 10px rgba(102, 252, 241, 0.4);
 }
 
-/* Второстепенная кнопка (Назад / Контуры) */
+/* Второстепенная кнопка */
 .btn-outline {
     border: 1px solid var(--text-muted);
     padding: 10px 20px;
@@ -45,11 +45,11 @@
     background: rgba(102, 252, 241, 0.05);
 }
 
-/* Кнопки иконок (Корзина / Удалить) */
+/* Кнопки иконок */
 .btn-icon {
     padding: var(--spacing-sm);
     color: var(--danger);
-    background: rgba(239, 68, 68, 0.1);
+    background: var(--danger-light);
     border-radius: var(--radius-sm);
     transition: all 0.3s ease;
     display: inline-flex;
@@ -59,8 +59,8 @@
 
 .btn-icon:hover {
     background: var(--danger);
-    color: white;
-    box-shadow: 0 0 15px rgba(239, 68, 68, 0.5);
+    color: var(--text-main);
+    box-shadow: 0 0 15px var(--danger-hover);
     transform: translateY(-2px);
 }
 
@@ -70,8 +70,8 @@
 
 /* Кнопка заказа в Telegram */
 .btn-tg {
-    background: linear-gradient(135deg, #0088cc, #005580);
-    color: white;
+    background: linear-gradient(135deg, var(--brand-tg), var(--brand-tg-dark));
+    color: var(--text-main);
     padding: 14px 28px;
     border-radius: var(--radius-md);
     font-size: 1.2rem;
@@ -87,7 +87,7 @@
 }
 
 .btn-tg:hover {
-    background: linear-gradient(135deg, #0099e6, #006699);
+    background: linear-gradient(135deg, var(--brand-tg-hover), var(--brand-tg));
     transform: translateY(-3px);
     box-shadow: 0 12px 25px rgba(0, 136, 204, 0.5), 0 0 15px rgba(0, 136, 204, 0.3);
 }

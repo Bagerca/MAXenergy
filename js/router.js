@@ -3,17 +3,20 @@ window.App = window.App || {};
 window.App.router = {
     routes: [],
     
-    // Регистрация маршрутов с использованием Regex
     addRoute(pathRegex, viewComponent) {
         this.routes.push({ pathRegex, viewComponent });
     },
 
-    // Логика перехода
     async navigate(hash) {
         console.log('[Router] Navigating to:', hash);
         
-        // Очищаем хэш (например, '#/drink/123' -> '/drink/123')
-        const path = hash === '' || hash === '#' ? '/' : hash.slice(1);
+        // Разделяем путь и query параметры (например: #/catalog?sort=price)
+        const [hashPath, queryString] = hash.split('?');
+        const path = hashPath === '' || hashPath === '#' ? '/' : hashPath.slice(1);
+        
+        // Парсим Query
+        const searchParams = new URLSearchParams(queryString || '');
+        const query = Object.fromEntries(searchParams.entries());
         
         let matchFound = false;
         
@@ -21,56 +24,44 @@ window.App.router = {
             const match = path.match(route.pathRegex);
             if (match) {
                 matchFound = true;
-                
-                // Извлекаем параметры (например, ID)
                 const params = match.groups || {};
                 
                 try {
-                    // Рендерим компонент
-                    const { html, afterRender } = route.viewComponent.render(params);
+                    // Передаем и параметры пути, и query
+                    const { html, afterRender } = route.viewComponent.render(params, query);
                     const mainEl = document.getElementById('app-main');
                     
-                    // Перезаписываем DOM
                     mainEl.innerHTML = html;
                     
-                    // Перезапускаем анимацию
                     mainEl.classList.remove('fade-in');
-                    void mainEl.offsetWidth; // Триггер рефлоу
+                    void mainEl.offsetWidth; 
                     mainEl.classList.add('fade-in');
                     
-                    // Вешаем слушатели событий
                     if (afterRender) afterRender();
-                    
                 } catch (error) {
                     console.error('[Router] Render error:', error);
                 }
-                
                 break;
             }
         }
 
         if (!matchFound) {
-            console.warn('[Router] 404 - Route not found');
             document.getElementById('app-main').innerHTML = `
                 <div class="container empty-state">
                     <h1>404</h1>
-                    <p>Куда ты забрел, студент?</p>
-                    <a href="#/" class="btn-outline">Домой</a>
+                    <p>Такой страницы не существует.</p>
+                    <a href="#/" class="btn-outline" style="margin-top: 1rem; display: inline-block;">На главную</a>
                 </div>
             `;
         }
     },
 
-    // Метод для принудительной перерисовки текущего экрана (используется в корзине)
     forceRerender() {
         this.navigate(window.location.hash);
     },
 
     init() {
-        // Слушаем изменение хэша (кнопки Назад/Вперед в браузере)
         window.addEventListener('hashchange', () => this.navigate(window.location.hash));
-        
-        // Первичная загрузка
         this.navigate(window.location.hash);
     }
 };

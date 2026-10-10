@@ -2,7 +2,7 @@ window.App = window.App || {};
 window.App.views = window.App.views || {};
 
 window.App.views.CatalogView = {
-    render() {
+    render(params, query) {
         const catalog = window.App.catalog;
         
         const html = `
@@ -19,20 +19,14 @@ window.App.views.CatalogView = {
         `;
 
         const afterRender = () => {
-            // Делегирование событий для кнопок "В корзину"
             document.querySelectorAll('[data-action="add-to-cart"]').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     const id = e.target.getAttribute('data-id');
-                    window.App.store.addToCart(id);
+                    const product = window.App.catalog.find(p => p.id === id);
                     
-                    // Микро-анимация кнопки
-                    const originalText = e.target.textContent;
-                    e.target.textContent = 'Добавлено!';
-                    e.target.style.backgroundColor = 'var(--accent-purple)';
-                    setTimeout(() => {
-                        e.target.textContent = originalText;
-                        e.target.style.backgroundColor = '';
-                    }, 1000);
+                    window.App.store.addToCart(id);
+                    // Вызываем глобальный Toast вместо порчи стилей кнопки
+                    window.App.components.Toast.show(`${product.name} добавлен!`);
                 });
             });
         };
