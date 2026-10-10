@@ -1,0 +1,97 @@
+/* Главная кнопка (В корзину) */
+.btn-primary {
+    background-color: var(--accent-neon);
+    color: #0b0c10; /* Ультра-тёмный текст для читаемости */
+    padding: 10px 20px;
+    border-radius: var(--radius-sm);
+    font-weight: 900;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-shadow: 0 0 15px rgba(102, 252, 241, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-primary:hover {
+    background-color: #7ffdf5; /* Чуть светлее при наведении */
+    box-shadow: 
+        0 0 20px rgba(102, 252, 241, 0.6), 
+        0 0 40px rgba(102, 252, 241, 0.3);
+    transform: translateY(-2px);
+}
+
+.btn-primary:active {
+    transform: scale(0.95) translateY(0);
+    box-shadow: 0 0 10px rgba(102, 252, 241, 0.4);
+}
+
+/* Второстепенная кнопка (Назад / Контуры) */
+.btn-outline {
+    border: 1px solid var(--text-muted);
+    padding: 10px 20px;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    color: var(--text-muted);
+    transition: all 0.3s ease;
+    background: transparent;
+}
+
+.btn-outline:hover {
+    border-color: var(--accent-neon);
+    color: var(--accent-neon);
+    box-shadow: 0 0 15px rgba(102, 252, 241, 0.2);
+    background: rgba(102, 252, 241, 0.05);
+}
+
+/* Кнопки иконок (Корзина / Удалить) */
+.btn-icon {
+    padding: var(--spacing-sm);
+    color: var(--danger);
+    background: rgba(239, 68, 68, 0.1);
+    border-radius: var(--radius-sm);
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-icon:hover {
+    background: var(--danger);
+    color: white;
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.5);
+    transform: translateY(-2px);
+}
+
+.btn-icon:active {
+    transform: scale(0.95);
+}
+
+/* Кнопка заказа в Telegram */
+.btn-tg {
+    background: linear-gradient(135deg, #0088cc, #005580);
+    color: white;
+    padding: 14px 28px;
+    border-radius: var(--radius-md);
+    font-size: 1.2rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-shadow: 0 8px 20px rgba(0, 136, 204, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.btn-tg:hover {
+    background: linear-gradient(135deg, #0099e6, #006699);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 25px rgba(0, 136, 204, 0.5), 0 0 15px rgba(0, 136, 204, 0.3);
+}
+
+.btn-tg:active {
+    transform: scale(0.98) translateY(0);
+}

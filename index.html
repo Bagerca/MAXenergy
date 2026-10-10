@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MaxEnergy | СПК 104к</title>
+    
+    <!-- CSS Архитектура -->
+    <!-- 1. Токены (Переменные) -->
+    <link rel="stylesheet" href="css/variables.css">
+    
+    <!-- 2. База -->
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/utilities.css">
+    
+    <!-- 3. Компоненты -->
+    <link rel="stylesheet" href="css/components/buttons.css">
+    <link rel="stylesheet" href="css/components/header.css">
+    <link rel="stylesheet" href="css/components/hero.css">
+    <link rel="stylesheet" href="css/components/product-card.css">
+    
+    <!-- 4. Экраны (Views) -->
+    <link rel="stylesheet" href="css/views/drink-details.css">
+    <link rel="stylesheet" href="css/views/cart.css">
+</head>
+<body>
+    <!-- Глобальный каркас приложения -->
+    <div id="app">
+        <header id="app-header"></header>
+        <main id="app-main" class="fade-in"></main>
+    </div>
+
+    <!-- 1. Данные (Манифест) -->
+    <script src="data/catalog.js"></script>
+    
+    <!-- 2. Утилиты -->
+    <script src="js/utils/icons.js"></script>
+    
+    <!-- 3. Стейт-менеджмент -->
+    <script src="js/store.js"></script>
+    
+    <!-- 4. Компоненты -->
+    <script src="js/components/header.js"></script>
+    <script src="js/components/productCard.js"></script>
+    
+    <!-- 5. Экраны (Views) -->
+    <script src="js/views/catalogView.js"></script>
+    <script src="js/views/drinkView.js"></script>
+    <script src="js/views/cartView.js"></script>
+    
+    <!-- 6. Архитектура -->
+    <script src="js/router.js"></script>
+    
+    <!-- 7. Инициализация -->
+    <script src="js/app.js"></script>
+</body>
+</html>

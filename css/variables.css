@@ -1,0 +1,38 @@
+:root {
+    /* Цветовая палитра: Киберпанк / Энергетики */
+    --bg-color: #0b0c10;
+    --surface-color: #1f2833;
+    --surface-hover: #2a3644;
+    
+    --text-main: #ffffff;
+    --text-muted: #c5c6c7;
+    
+    --accent-neon: #66fcf1; /* Токсично-голубой/зеленый */
+    --accent-glow: rgba(102, 252, 241, 0.4);
+    --accent-purple: #c026d3;
+    --accent-orange: #f97316;
+    
+    --danger: #ef4444;
+    
+    /* Типографика */
+    --font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    --font-size-base: 16px;
+    
+    /* Отступы (Spacing) */
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+    
+    /* Радиусы и тени */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+    
+    --shadow-neon: 0 0 10px var(--accent-glow);
+    
+    /* Z-index слои */
+    --z-header: 100;
+    --z-modal: 200;
+}

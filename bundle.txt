@@ -1,0 +1,1159 @@
+# PROJECT BUNDLE
+
+### README.md
+```markdown
+# eng
+
+```
+
+### index.html
+```html
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MaxEnergy | СПК 104к</title>
+    
+    <!-- CSS Архитектура -->
+    <!-- 1. Токены (Переменные) -->
+    <link rel="stylesheet" href="css/variables.css">
+    
+    <!-- 2. База -->
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/utilities.css">
+    
+    <!-- 3. Компоненты -->
+    <link rel="stylesheet" href="css/components/buttons.css">
+    <link rel="stylesheet" href="css/components/header.css">
+    <link rel="stylesheet" href="css/components/hero.css">
+    <link rel="stylesheet" href="css/components/product-card.css">
+    
+    <!-- 4. Экраны (Views) -->
+    <link rel="stylesheet" href="css/views/drink-details.css">
+    <link rel="stylesheet" href="css/views/cart.css">
+</head>
+<body>
+    <!-- Глобальный каркас приложения -->
+    <div id="app">
+        <header id="app-header"></header>
+        <main id="app-main" class="fade-in"></main>
+    </div>
+
+    <!-- 1. Данные (Манифест) -->
+    <script src="data/catalog.js"></script>
+    
+    <!-- 2. Утилиты -->
+    <script src="js/utils/icons.js"></script>
+    
+    <!-- 3. Стейт-менеджмент -->
+    <script src="js/store.js"></script>
+    
+    <!-- 4. Компоненты -->
+    <script src="js/components/header.js"></script>
+    <script src="js/components/productCard.js"></script>
+    
+    <!-- 5. Экраны (Views) -->
+    <script src="js/views/catalogView.js"></script>
+    <script src="js/views/drinkView.js"></script>
+    <script src="js/views/cartView.js"></script>
+    
+    <!-- 6. Архитектура -->
+    <script src="js/router.js"></script>
+    
+    <!-- 7. Инициализация -->
+    <script src="js/app.js"></script>
+</body>
+</html>
+```
+
+### css/layout.css
+```css
+#app {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.container {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-md);
+}
+
+#app-main {
+    flex-grow: 1;
+    padding: var(--spacing-xl) 0;
+}
+```
+
+### css/reset.css
+```css
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    font-family: var(--font-family);
+    font-size: var(--font-size-base);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+ul {
+    list-style: none;
+}
+
+button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    color: inherit;
+}
+```
+
+### css/utilities.css
+```css
+.empty-state {
+    text-align: center;
+    padding: var(--spacing-xl);
+    color: var(--text-muted);
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+```
+
+### css/variables.css
+```css
+:root {
+    /* Цветовая палитра: Киберпанк / Энергетики */
+    --bg-color: #0b0c10;
+    --surface-color: #1f2833;
+    --surface-hover: #2a3644;
+    
+    --text-main: #ffffff;
+    --text-muted: #c5c6c7;
+    
+    --accent-neon: #66fcf1; /* Токсично-голубой/зеленый */
+    --accent-glow: rgba(102, 252, 241, 0.4);
+    --accent-purple: #c026d3;
+    --accent-orange: #f97316;
+    
+    --danger: #ef4444;
+    
+    /* Типографика */
+    --font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    --font-size-base: 16px;
+    
+    /* Отступы (Spacing) */
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+    
+    /* Радиусы и тени */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+    
+    --shadow-neon: 0 0 10px var(--accent-glow);
+    
+    /* Z-index слои */
+    --z-header: 100;
+    --z-modal: 200;
+}
+```
+
+### css/components/buttons.css
+```css
+/* Главная кнопка (В корзину) */
+.btn-primary {
+    background-color: var(--accent-neon);
+    color: #0b0c10; /* Ультра-тёмный текст для читаемости */
+    padding: 10px 20px;
+    border-radius: var(--radius-sm);
+    font-weight: 900;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-shadow: 0 0 15px rgba(102, 252, 241, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-primary:hover {
+    background-color: #7ffdf5; /* Чуть светлее при наведении */
+    box-shadow: 
+        0 0 20px rgba(102, 252, 241, 0.6), 
+        0 0 40px rgba(102, 252, 241, 0.3);
+    transform: translateY(-2px);
+}
+
+.btn-primary:active {
+    transform: scale(0.95) translateY(0);
+    box-shadow: 0 0 10px rgba(102, 252, 241, 0.4);
+}
+
+/* Второстепенная кнопка (Назад / Контуры) */
+.btn-outline {
+    border: 1px solid var(--text-muted);
+    padding: 10px 20px;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    color: var(--text-muted);
+    transition: all 0.3s ease;
+    background: transparent;
+}
+
+.btn-outline:hover {
+    border-color: var(--accent-neon);
+    color: var(--accent-neon);
+    box-shadow: 0 0 15px rgba(102, 252, 241, 0.2);
+    background: rgba(102, 252, 241, 0.05);
+}
+
+/* Кнопки иконок (Корзина / Удалить) */
+.btn-icon {
+    padding: var(--spacing-sm);
+    color: var(--danger);
+    background: rgba(239, 68, 68, 0.1);
+    border-radius: var(--radius-sm);
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-icon:hover {
+    background: var(--danger);
+    color: white;
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.5);
+    transform: translateY(-2px);
+}
+
+.btn-icon:active {
+    transform: scale(0.95);
+}
+
+/* Кнопка заказа в Telegram */
+.btn-tg {
+    background: linear-gradient(135deg, #0088cc, #005580);
+    color: white;
+    padding: 14px 28px;
+    border-radius: var(--radius-md);
+    font-size: 1.2rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-shadow: 0 8px 20px rgba(0, 136, 204, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.btn-tg:hover {
+    background: linear-gradient(135deg, #0099e6, #006699);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 25px rgba(0, 136, 204, 0.5), 0 0 15px rgba(0, 136, 204, 0.3);
+}
+
+.btn-tg:active {
+    transform: scale(0.98) translateY(0);
+}
+```
+
+### css/components/header.css
+```css
+header {
+    background-color: rgba(11, 12, 16, 0.7);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    padding: var(--spacing-md) 0;
+    position: sticky;
+    top: 0;
+    z-index: var(--z-header);
+    border-bottom: 1px solid rgba(102, 252, 241, 0.15);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+}
+
+.header-full {
+    padding: 0 2rem;
+    width: 100%;
+}
+
+.header-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.8rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    background: linear-gradient(90deg, var(--accent-neon), #3b82f6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    transition: transform 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+}
+
+.logo:hover {
+    transform: scale(1.02);
+}
+
+.logo span {
+    -webkit-text-fill-color: var(--text-main);
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-left: 2px;
+}
+
+.cart-btn {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+    background-color: rgba(102, 252, 241, 0.05);
+    border: 1px solid rgba(102, 252, 241, 0.2);
+    border-radius: var(--radius-sm);
+    transition: all 0.3s ease;
+}
+
+.cart-btn:hover {
+    background-color: rgba(102, 252, 241, 0.15);
+    box-shadow: 0 0 15px rgba(102, 252, 241, 0.3);
+    border-color: var(--accent-neon);
+}
+
+.cart-badge {
+    background-color: var(--accent-neon);
+    color: var(--bg-color);
+    font-weight: 900;
+    font-size: 0.85rem;
+    padding: 2px 8px;
+    border-radius: 12px;
+    box-shadow: 0 0 10px var(--accent-glow);
+}
+
+@media (max-width: 768px) {
+    .header-full {
+        padding: 0 1rem;
+    }
+}
+```
+
+### css/components/hero.css
+```css
+.hero {
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+    padding: 4rem 2rem;
+    background: linear-gradient(135deg, rgba(31, 40, 51, 0.8), rgba(11, 12, 16, 0.95));
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(0, 210, 255, 0.15);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+    position: relative;
+    overflow: hidden;
+}
+
+.hero h1 {
+    font-size: 3.5rem;
+    font-weight: 900;
+    margin-bottom: var(--spacing-md);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    line-height: 1.1;
+    animation: neonBlink 4s infinite alternate;
+}
+
+@keyframes neonBlink {
+    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+        color: #00d2ff;
+        text-shadow: 
+            0 0 5px rgba(0, 210, 255, 0.8),
+            0 0 15px rgba(0, 210, 255, 0.6),
+            0 0 30px rgba(0, 210, 255, 0.4);
+    }
+    20%, 24%, 55% {
+        color: #163a47;
+        text-shadow: none;
+    }
+}
+
+.hero p {
+    color: var(--text-muted);
+    font-size: 1.3rem;
+    max-width: 600px;
+    margin: 0 auto;
+    font-weight: 400;
+}
+
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 2.2rem;
+    }
+    
+    .hero p {
+        font-size: 1.1rem;
+    }
+}
+```
+
+### css/components/product-card.css
+```css
+.catalog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+/* Сама карточка */
+.product-card {
+    background: linear-gradient(145deg, rgba(31, 40, 51, 0.9), rgba(11, 12, 16, 0.9));
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Эффекты при наведении на карточку */
+.product-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(102, 252, 241, 0.4);
+    box-shadow: 
+        0 15px 30px rgba(0, 0, 0, 0.6), 
+        0 0 15px rgba(102, 252, 241, 0.15);
+}
+
+/* "Банка" (контейнер для молнии) */
+.product-image {
+    height: 180px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: var(--spacing-sm);
+    /* Глубокая внутренняя тень для объема */
+    box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.9), 0 4px 10px rgba(0,0,0,0.5);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: filter 0.3s ease;
+}
+
+/* Молния внутри банки */
+.product-image svg {
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    filter: drop-shadow(0 0 5px var(--accent-neon));
+}
+
+/* Заряжаем молнию при наведении на карточку */
+.product-card:hover .product-image svg {
+    transform: scale(1.3);
+    filter: drop-shadow(0 0 15px var(--accent-neon)) drop-shadow(0 0 30px var(--accent-neon));
+}
+
+/* 3D Градиенты (Светлый центр, темные края) */
+.bg-monster { 
+    background: linear-gradient(90deg, #051405 0%, #174217 30%, #358035 50%, #174217 70%, #051405 100%); 
+}
+.bg-flash { 
+    background: linear-gradient(90deg, #1f2008 0%, #4a4e10 30%, #878f1b 50%, #4a4e10 70%, #1f2008 100%); 
+}
+.bg-redbull { 
+    background: linear-gradient(90deg, #05112e 0%, #15327a 30%, #3867d6 50%, #15327a 70%, #05112e 100%); 
+}
+.bg-tornado { 
+    background: linear-gradient(90deg, #1f0505 0%, #521010 30%, #9e2020 50%, #521010 70%, #1f0505 100%); 
+}
+
+/* Светящийся киберпанк-тег */
+.product-tag {
+    align-self: flex-start;
+    background-color: rgba(249, 115, 22, 0.15);
+    border: 1px solid rgba(249, 115, 22, 0.4);
+    font-size: 0.7rem;
+    padding: 4px 10px;
+    border-radius: 6px;
+    color: var(--accent-orange);
+    text-transform: uppercase;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+    box-shadow: 0 0 10px rgba(249, 115, 22, 0.2);
+    text-shadow: 0 0 5px rgba(249, 115, 22, 0.5);
+    z-index: 2;
+}
+
+/* Название энергетика */
+.product-name {
+    font-size: 1.3rem;
+    font-weight: 900;
+    color: var(--text-main);
+    letter-spacing: 0.5px;
+    margin-top: 4px;
+    transition: color 0.2s;
+}
+
+.product-card:hover .product-name {
+    color: var(--accent-neon);
+    text-shadow: 0 0 10px rgba(102, 252, 241, 0.3);
+}
+
+.product-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+    padding-top: var(--spacing-md);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Цена */
+.product-price {
+    font-size: 1.4rem;
+    font-weight: 900;
+    color: var(--accent-neon);
+    text-shadow: 0 0 10px rgba(102, 252, 241, 0.4);
+}
+```
+
+### css/views/cart.css
+```css
+.cart-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-xl);
+}
+
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--surface-color);
+    padding: var(--spacing-md);
+    border-radius: var(--radius-md);
+}
+
+.cart-item-info {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+.cart-item-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+.cart-total-box {
+    background-color: var(--surface-hover);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-md);
+    text-align: right;
+}
+
+.cart-total-box h2 {
+    margin-bottom: var(--spacing-md);
+}
+
+@media (max-width: 768px) {
+    .cart-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-md);
+    }
+    
+    .cart-item-controls {
+        width: 100%;
+        justify-content: space-between;
+    }
+}
+```
+
+### css/views/drink-details.css
+```css
+.drink-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-xl);
+    background-color: var(--surface-color);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-lg);
+}
+
+.drink-info h1 {
+    font-size: 2rem;
+    margin-bottom: var(--spacing-md);
+}
+
+.drink-info p {
+    color: var(--text-muted);
+    margin-bottom: var(--spacing-lg);
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+    color: var(--text-muted);
+    transition: color 0.2s;
+}
+
+.back-link:hover {
+    color: var(--accent-neon);
+}
+
+@media (max-width: 768px) {
+    .drink-details {
+        grid-template-columns: 1fr;
+    }
+}
+```
+
+### data/catalog.js
+```javascript
+window.App = window.App || {};
+
+window.App.catalog = [
+    {
+        id: 'monster-classic',
+        name: 'Monster Energy Classic',
+        price: 160,
+        tag: 'Топ для сессии',
+        desc: 'Классический зелёный монстр. Мощный заряд таурина и кофеина. Идеально, чтобы дописать курсач за ночь.',
+        imageClass: 'bg-monster',
+        volume: '0.5 л'
+    },
+    {
+        id: 'flash-up',
+        name: 'Flash Up Energy',
+        price: 90,
+        tag: 'Бюджетно',
+        desc: 'Народный выбор 104к. Дешево, сердито, бьет по шарам. Что еще нужно перед первой парой?',
+        imageClass: 'bg-flash',
+        volume: '0.5 л'
+    },
+    {
+        id: 'redbull-sugarfree',
+        name: 'Red Bull Sugarfree',
+        price: 180,
+        tag: 'Мажорам',
+        desc: 'Окрыляет без лишних калорий. Для тех, кто следит за фигурой, но не следит за режимом сна.',
+        imageClass: 'bg-redbull',
+        volume: '0.25 л'
+    },
+    {
+        id: 'tornado-storm',
+        name: 'Tornado Storm',
+        price: 85,
+        tag: 'Смерть сердцу',
+        desc: 'Жесткий вкус, жесткий эффект. Только для опытных потребителей энергетиков.',
+        imageClass: 'bg-tornado',
+        volume: '0.45 л'
+    }
+];
+```
+
+### js/app.js
+```javascript
+window.App = window.App || {};
+
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('[App] Initialization started...');
+
+    try {
+        // 1. Инициализируем глобальные компоненты (Шапка)
+        window.App.components.Header.init();
+
+        // 2. Настраиваем маршруты Роутера
+        // Главная: точное совпадение с '/' или пустая строка
+        window.App.router.addRoute(/^\/$/, window.App.views.CatalogView);
+        
+        // Страница товара: ожидаем ID после /drink/
+        window.App.router.addRoute(/^\/drink\/(?<id>[a-z0-9-]+)$/, window.App.views.DrinkView);
+        
+        // Корзина
+        window.App.router.addRoute(/^\/cart$/, window.App.views.CartView);
+
+        // 3. Запускаем Роутер
+        window.App.router.init();
+        
+        console.log('[App] Successfully initialized.');
+    } catch (error) {
+        console.error('[App] Critical initialization error:', error);
+    }
+});
+```
+
+### js/router.js
+```javascript
+window.App = window.App || {};
+
+window.App.router = {
+    routes: [],
+    
+    // Регистрация маршрутов с использованием Regex
+    addRoute(pathRegex, viewComponent) {
+        this.routes.push({ pathRegex, viewComponent });
+    },
+
+    // Логика перехода
+    async navigate(hash) {
+        console.log('[Router] Navigating to:', hash);
+        
+        // Очищаем хэш (например, '#/drink/123' -> '/drink/123')
+        const path = hash === '' || hash === '#' ? '/' : hash.slice(1);
+        
+        let matchFound = false;
+        
+        for (const route of this.routes) {
+            const match = path.match(route.pathRegex);
+            if (match) {
+                matchFound = true;
+                
+                // Извлекаем параметры (например, ID)
+                const params = match.groups || {};
+                
+                try {
+                    // Рендерим компонент
+                    const { html, afterRender } = route.viewComponent.render(params);
+                    const mainEl = document.getElementById('app-main');
+                    
+                    // Перезаписываем DOM
+                    mainEl.innerHTML = html;
+                    
+                    // Перезапускаем анимацию
+                    mainEl.classList.remove('fade-in');
+                    void mainEl.offsetWidth; // Триггер рефлоу
+                    mainEl.classList.add('fade-in');
+                    
+                    // Вешаем слушатели событий
+                    if (afterRender) afterRender();
+                    
+                } catch (error) {
+                    console.error('[Router] Render error:', error);
+                }
+                
+                break;
+            }
+        }
+
+        if (!matchFound) {
+            console.warn('[Router] 404 - Route not found');
+            document.getElementById('app-main').innerHTML = `
+                <div class="container empty-state">
+                    <h1>404</h1>
+                    <p>Куда ты забрел, студент?</p>
+                    <a href="#/" class="btn-outline">Домой</a>
+                </div>
+            `;
+        }
+    },
+
+    // Метод для принудительной перерисовки текущего экрана (используется в корзине)
+    forceRerender() {
+        this.navigate(window.location.hash);
+    },
+
+    init() {
+        // Слушаем изменение хэша (кнопки Назад/Вперед в браузере)
+        window.addEventListener('hashchange', () => this.navigate(window.location.hash));
+        
+        // Первичная загрузка
+        this.navigate(window.location.hash);
+    }
+};
+```
+
+### js/store.js
+```javascript
+window.App = window.App || {};
+
+window.App.store = {
+    state: {
+        cart: [] // Формат: [{ product: Object, quantity: 1 }]
+    },
+    listeners: [],
+    
+    // Подписка на изменения
+    subscribe(callback) {
+        this.listeners.push(callback);
+    },
+    
+    // Уведомление подписчиков
+    notify() {
+        console.log('[Store] State updated:', this.state);
+        this.listeners.forEach(callback => {
+            try {
+                callback(this.state);
+            } catch (e) {
+                console.error('[Store] Listener error:', e);
+            }
+        });
+    },
+
+    // Действия (Actions)
+    addToCart(productId) {
+        const product = window.App.catalog.find(p => p.id === productId);
+        if (!product) return;
+
+        const existingItem = this.state.cart.find(item => item.product.id === productId);
+        if (existingItem) {
+            existingItem.quantity += 1;
+        } else {
+            this.state.cart.push({ product, quantity: 1 });
+        }
+        this.notify();
+    },
+
+    removeFromCart(productId) {
+        this.state.cart = this.state.cart.filter(item => item.product.id !== productId);
+        this.notify();
+    },
+    
+    updateQuantity(productId, delta) {
+        const item = this.state.cart.find(item => item.product.id === productId);
+        if (item) {
+            item.quantity += delta;
+            if (item.quantity <= 0) {
+                this.removeFromCart(productId);
+            } else {
+                this.notify();
+            }
+        }
+    },
+
+    // Геттеры (Getters)
+    getCartTotalItems() {
+        return this.state.cart.reduce((total, item) => total + item.quantity, 0);
+    },
+
+    getCartTotalPrice() {
+        return this.state.cart.reduce((total, item) => total + (item.product.price * item.quantity), 0);
+    }
+};
+```
+
+### js/components/header.js
+```javascript
+window.App = window.App || {};
+window.App.components = window.App.components || {};
+
+window.App.components.Header = {
+    render() {
+        const headerEl = document.getElementById('app-header');
+        
+        // Убрали .container, добавили класс .header-full для растягивания на весь экран
+        headerEl.innerHTML = `
+            <div class="header-inner header-full">
+                <a href="#/" class="logo">Max<span>Energy</span></a>
+                <a href="#/cart" class="cart-btn">
+                    ${window.App.icons.cart}
+                    <span class="cart-badge" id="cart-badge">0</span>
+                </a>
+            </div>
+        `;
+
+        // Первичная установка счетчика
+        this.updateBadge(window.App.store.state);
+    },
+
+    // Реактивное обновление счетчика
+    updateBadge(state) {
+        const badge = document.getElementById('cart-badge');
+        if (badge) {
+            const total = window.App.store.getCartTotalItems();
+            badge.textContent = total;
+            // Скрываем бейдж, если пусто
+            badge.style.display = total > 0 ? 'inline-block' : 'none';
+        }
+    },
+
+    init() {
+        this.render();
+        // Подписываем шапку на изменения в Store
+        window.App.store.subscribe((state) => this.updateBadge(state));
+    }
+};
+```
+
+### js/components/productCard.js
+```javascript
+window.App = window.App || {};
+window.App.components = window.App.components || {};
+
+window.App.components.ProductCard = (product) => {
+    return `
+        <div class="product-card">
+            <span class="product-tag">${product.tag}</span>
+            <a href="#/drink/${product.id}" class="product-image ${product.imageClass}">
+                ${window.App.icons.bolt}
+            </a>
+            <a href="#/drink/${product.id}" class="product-name">${product.name}</a>
+            <div class="product-footer">
+                <span class="product-price">${product.price} ₽</span>
+                <button class="btn-primary" data-action="add-to-cart" data-id="${product.id}">
+                    В корзину
+                </button>
+            </div>
+        </div>
+    `;
+};
+```
+
+### js/utils/icons.js
+```javascript
+window.App = window.App || {};
+
+window.App.icons = {
+    cart: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>`,
+    bolt: `<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--accent-neon)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>`,
+    back: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>`,
+    trash: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>`,
+    send: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>`
+};
+```
+
+### js/views/cartView.js
+```javascript
+window.App = window.App || {};
+window.App.views = window.App.views || {};
+
+window.App.views.CartView = {
+    render() {
+        const { cart } = window.App.store.state;
+        const totalPrice = window.App.store.getCartTotalPrice();
+        
+        let html = `<div class="container"><a href="#/" class="back-link">${window.App.icons.back} Назад</a><h2>Твой заказ</h2><br>`;
+
+        if (cart.length === 0) {
+            html += `
+                <div class="empty-state">
+                    <p>Тут пусто. Сердечко пока в безопасности.</p>
+                    <br>
+                    <a href="#/" class="btn-primary">Выбрать энергетик</a>
+                </div>
+            `;
+        } else {
+            html += `<div class="cart-list">`;
+            cart.forEach(item => {
+                html += `
+                    <div class="cart-item">
+                        <div class="cart-item-info">
+                            <div style="width: 50px; height: 50px;" class="product-image ${item.product.imageClass}">
+                                ${window.App.icons.bolt}
+                            </div>
+                            <div>
+                                <strong>${item.product.name}</strong>
+                                <div>${item.product.price} ₽</div>
+                            </div>
+                        </div>
+                        <div class="cart-item-controls">
+                            <button class="btn-outline qty-btn" data-action="minus" data-id="${item.product.id}">-</button>
+                            <span>${item.quantity} шт.</span>
+                            <button class="btn-outline qty-btn" data-action="plus" data-id="${item.product.id}">+</button>
+                            <button class="btn-icon remove-btn" data-id="${item.product.id}">
+                                ${window.App.icons.trash}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            // Формируем сообщение для Telegram
+            const tgMessage = this.generateOrderMessage(cart, totalPrice);
+            // Замени 'example_username' на реальный ТГ Максима
+            const tgLink = `https://t.me/example_username?text=${encodeURIComponent(tgMessage)}`;
+
+            html += `
+                </div>
+                <div class="cart-total-box">
+                    <h2>Итого: ${totalPrice} ₽</h2>
+                    <a href="${tgLink}" target="_blank" class="btn-tg">
+                        ${window.App.icons.send} Заказать у Максима
+                    </a>
+                    <p style="margin-top: 8px; color: var(--text-muted); font-size: 0.85rem;">
+                        Откроется Telegram с готовым текстом заказа.
+                    </p>
+                </div>
+            `;
+        }
+
+        html += `</div>`;
+
+        const afterRender = () => {
+            // Обработчики кнопок количества
+            document.querySelectorAll('.qty-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const id = e.currentTarget.getAttribute('data-id');
+                    const action = e.currentTarget.getAttribute('data-action');
+                    window.App.store.updateQuantity(id, action === 'plus' ? 1 : -1);
+                    // Так как у нас нет виртуального DOM, мы принудительно вызываем ререндер маршрута
+                    window.App.router.forceRerender();
+                });
+            });
+
+            // Обработчик удаления
+            document.querySelectorAll('.remove-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const id = e.currentTarget.getAttribute('data-id');
+                    window.App.store.removeFromCart(id);
+                    window.App.router.forceRerender();
+                });
+            });
+        };
+
+        return { html, afterRender };
+    },
+
+    generateOrderMessage(cart, total) {
+        let text = `Привет, Макс! Я из СПК, хочу купить:\n\n`;
+        cart.forEach(item => {
+            text += `- ${item.product.name} x${item.quantity} (${item.product.price * item.quantity}р)\n`;
+        });
+        text += `\nИтого: ${total} руб.\nГде и когда можно забрать?`;
+        return text;
+    }
+};
+```
+
+### js/views/catalogView.js
+```javascript
+window.App = window.App || {};
+window.App.views = window.App.views || {};
+
+window.App.views.CatalogView = {
+    render() {
+        const catalog = window.App.catalog;
+        
+        const html = `
+            <div class="container">
+                <section class="hero">
+                    <h1>ЗАРЯДИСЬ ПЕРЕД ПАРАМИ</h1>
+                    <p>Твой личный дилер энергии в СПК. Быстрая доставка от Макса прямо в руки.</p>
+                </section>
+                
+                <section class="catalog-grid">
+                    ${catalog.map(product => window.App.components.ProductCard(product)).join('')}
+                </section>
+            </div>
+        `;
+
+        const afterRender = () => {
+            // Делегирование событий для кнопок "В корзину"
+            document.querySelectorAll('[data-action="add-to-cart"]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const id = e.target.getAttribute('data-id');
+                    window.App.store.addToCart(id);
+                    
+                    // Микро-анимация кнопки
+                    const originalText = e.target.textContent;
+                    e.target.textContent = 'Добавлено!';
+                    e.target.style.backgroundColor = 'var(--accent-purple)';
+                    setTimeout(() => {
+                        e.target.textContent = originalText;
+                        e.target.style.backgroundColor = '';
+                    }, 1000);
+                });
+            });
+        };
+
+        return { html, afterRender };
+    }
+};
+```
+
+### js/views/drinkView.js
+```javascript
+window.App = window.App || {};
+window.App.views = window.App.views || {};
+
+window.App.views.DrinkView = {
+    render(params) {
+        const productId = params.id;
+        const product = window.App.catalog.find(p => p.id === productId);
+
+        if (!product) {
+            return {
+                html: `<div class="container empty-state"><h1>404</h1><p>Энергетик не найден.</p><a href="#/" class="btn-outline">На главную</a></div>`,
+                afterRender: null
+            };
+        }
+
+        const html = `
+            <div class="container">
+                <a href="#/" class="back-link">
+                    ${window.App.icons.back} Вернуться в каталог
+                </a>
+                
+                <article class="drink-details">
+                    <div class="product-image ${product.imageClass}" style="height: 300px;">
+                        ${window.App.icons.bolt}
+                    </div>
+                    
+                    <div class="drink-info">
+                        <span class="product-tag">${product.tag}</span>
+                        <h1>${product.name}</h1>
+                        <p class="product-price" style="font-size: 2rem; margin-bottom: 16px;">${product.price} ₽</p>
+                        
+                        <p><strong>Объем:</strong> ${product.volume}</p>
+                        <p>${product.desc}</p>
+                        
+                        <button class="btn-primary" id="detail-add-btn" style="width: 100%; padding: 16px; font-size: 1.2rem; margin-top: 24px;">
+                            Добавить в корзину
+                        </button>
+                    </div>
+                </article>
+            </div>
+        `;
+
+        const afterRender = () => {
+            const btn = document.getElementById('detail-add-btn');
+            if (btn) {
+                btn.addEventListener('click', () => {
+                    window.App.store.addToCart(product.id);
+                    btn.textContent = 'В корзине!';
+                    setTimeout(() => btn.textContent = 'Добавить в корзину', 1000);
+                });
+            }
+        };
+
+        return { html, afterRender };
+    }
+};
+```
+
